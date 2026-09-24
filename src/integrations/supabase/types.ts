@@ -14,13 +14,165 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      categories: {
+        Row: {
+          created_at: string
+          id: string
+          name: string
+          position: number
+          restaurant_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          name: string
+          position?: number
+          restaurant_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          name?: string
+          position?: number
+          restaurant_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "categories_restaurant_id_fkey"
+            columns: ["restaurant_id"]
+            isOneToOne: false
+            referencedRelation: "restaurants"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      menu_items: {
+        Row: {
+          category_id: string | null
+          created_at: string
+          description: string | null
+          id: string
+          image_url: string | null
+          is_available: boolean
+          is_veg: boolean
+          name: string
+          position: number
+          price: number
+          restaurant_id: string
+        }
+        Insert: {
+          category_id?: string | null
+          created_at?: string
+          description?: string | null
+          id?: string
+          image_url?: string | null
+          is_available?: boolean
+          is_veg?: boolean
+          name: string
+          position?: number
+          price?: number
+          restaurant_id: string
+        }
+        Update: {
+          category_id?: string | null
+          created_at?: string
+          description?: string | null
+          id?: string
+          image_url?: string | null
+          is_available?: boolean
+          is_veg?: boolean
+          name?: string
+          position?: number
+          price?: number
+          restaurant_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "menu_items_category_id_fkey"
+            columns: ["category_id"]
+            isOneToOne: false
+            referencedRelation: "categories"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "menu_items_restaurant_id_fkey"
+            columns: ["restaurant_id"]
+            isOneToOne: false
+            referencedRelation: "restaurants"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      restaurants: {
+        Row: {
+          address: string | null
+          created_at: string
+          description: string | null
+          google_maps_url: string | null
+          google_rating: number | null
+          google_review_count: number | null
+          google_review_url: string | null
+          id: string
+          instagram_url: string | null
+          is_published: boolean
+          logo_url: string | null
+          name: string
+          owner_id: string | null
+          phone: string | null
+          slug: string
+          updated_at: string
+          whatsapp: string | null
+        }
+        Insert: {
+          address?: string | null
+          created_at?: string
+          description?: string | null
+          google_maps_url?: string | null
+          google_rating?: number | null
+          google_review_count?: number | null
+          google_review_url?: string | null
+          id?: string
+          instagram_url?: string | null
+          is_published?: boolean
+          logo_url?: string | null
+          name: string
+          owner_id?: string | null
+          phone?: string | null
+          slug: string
+          updated_at?: string
+          whatsapp?: string | null
+        }
+        Update: {
+          address?: string | null
+          created_at?: string
+          description?: string | null
+          google_maps_url?: string | null
+          google_rating?: number | null
+          google_review_count?: number | null
+          google_review_url?: string | null
+          id?: string
+          instagram_url?: string | null
+          is_published?: boolean
+          logo_url?: string | null
+          name?: string
+          owner_id?: string | null
+          phone?: string | null
+          slug?: string
+          updated_at?: string
+          whatsapp?: string | null
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      can_view_restaurant: {
+        Args: { _restaurant_id: string }
+        Returns: boolean
+      }
+      owns_restaurant: { Args: { _restaurant_id: string }; Returns: boolean }
     }
     Enums: {
       [_ in never]: never
