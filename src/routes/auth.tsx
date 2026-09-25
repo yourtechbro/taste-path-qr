@@ -1,9 +1,13 @@
 import { useEffect, useState } from "react";
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
+import { ArrowRight, Check, LoaderCircle, UtensilsCrossed } from "lucide-react";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { lovable } from "@/integrations/lovable/index";
 import { useAuth } from "@/hooks/useAuth";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 
 export const Route = createFileRoute("/auth")({
   head: () => ({
@@ -77,75 +81,121 @@ function AuthPage() {
   }
 
   return (
-    <div className="flex min-h-screen items-center justify-center px-5 py-12">
-      <div className="w-full max-w-sm">
-        <h1 className="text-balance font-display text-3xl font-semibold">
-          {mode === "signin" ? "Welcome back" : "Create your account"}
-        </h1>
-        <p className="mt-2 text-sm text-muted-foreground">
-          Manage your restaurant menu and QR code.
-        </p>
+    <main className="flex min-h-screen items-center justify-center overflow-hidden bg-background px-5 py-8 sm:px-8">
+      <div className="w-full max-w-[376px]">
+        <header className="auth-enter mb-6 text-center sm:mb-8">
+          <div className="auth-mark-enter mx-auto mb-3 grid size-14 -rotate-2 place-items-center rounded-2xl bg-primary text-primary-foreground shadow-auth-button sm:mb-4">
+            <UtensilsCrossed className="size-6" strokeWidth={1.8} />
+          </div>
+          <p className="font-display text-2xl font-semibold">MenuCard</p>
+          <p className="mt-1 text-sm text-muted-foreground">Your menu, ready for every table.</p>
+        </header>
 
         {checkEmail ? (
-          <div className="mt-6 rounded-[18px] bg-card p-5 ring-1 ring-foreground/5">
-            <p className="font-display text-lg font-semibold">Check your email</p>
-            <p className="mt-1 text-sm text-muted-foreground">
+          <section className="auth-enter auth-delay-1 rounded-2xl border border-border/70 bg-card p-7 text-center shadow-auth">
+            <div className="mx-auto mb-4 grid size-11 place-items-center rounded-full bg-sage/15 text-sage">
+              <Check className="size-5" />
+            </div>
+            <h1 className="font-display text-2xl font-semibold">Check your email</h1>
+            <p className="mt-2 text-sm leading-6 text-muted-foreground">
               We sent a confirmation link to {email}. Click it to finish signing up.
             </p>
-          </div>
+          </section>
         ) : (
           <>
-            <form onSubmit={handleSubmit} className="mt-6 space-y-3">
-              <input
-                type="email"
-                required
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                placeholder="you@restaurant.com"
-                className="w-full rounded-xl bg-card px-4 py-3 text-sm ring-1 ring-border outline-none focus:ring-2 focus:ring-ring"
-              />
-              <input
-                type="password"
-                required
-                minLength={6}
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                placeholder="Password"
-                className="w-full rounded-xl bg-card px-4 py-3 text-sm ring-1 ring-border outline-none focus:ring-2 focus:ring-ring"
-              />
-              <button
-                type="submit"
-                disabled={busy}
-                className="w-full rounded-xl bg-primary py-3 text-sm font-medium text-primary-foreground transition-opacity hover:opacity-90 disabled:opacity-50"
+            <section className="auth-enter auth-delay-1 rounded-2xl border border-border/70 bg-card p-6 shadow-auth sm:p-8">
+              <div className="mb-6">
+                <h1 className="font-display text-2xl font-semibold">
+                  {mode === "signin" ? "Welcome back" : "Create your account"}
+                </h1>
+                <p className="mt-1 text-sm text-muted-foreground">
+                  {mode === "signin"
+                    ? "Sign in to manage your digital menu."
+                    : "Start building your restaurant menu."}
+                </p>
+              </div>
+
+              <form onSubmit={handleSubmit} className="space-y-4">
+                <div className="space-y-2">
+                  <Label htmlFor="email" className="ml-0.5 text-xs text-muted-foreground">
+                    Email address
+                  </Label>
+                  <Input
+                    id="email"
+                    type="email"
+                    autoComplete="email"
+                    required
+                    value={email}
+                    onChange={(event) => setEmail(event.target.value)}
+                    placeholder="name@restaurant.com"
+                    className="h-12 rounded-xl bg-secondary/45 px-4 shadow-none transition-[background-color,border-color,box-shadow] duration-300 focus-visible:bg-card focus-visible:ring-2"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="password" className="ml-0.5 text-xs text-muted-foreground">
+                    Password
+                  </Label>
+                  <Input
+                    id="password"
+                    type="password"
+                    autoComplete={mode === "signin" ? "current-password" : "new-password"}
+                    required
+                    minLength={6}
+                    value={password}
+                    onChange={(event) => setPassword(event.target.value)}
+                    placeholder="At least 6 characters"
+                    className="h-12 rounded-xl bg-secondary/45 px-4 shadow-none transition-[background-color,border-color,box-shadow] duration-300 focus-visible:bg-card focus-visible:ring-2"
+                  />
+                </div>
+                <Button
+                  type="submit"
+                  disabled={busy}
+                  className="group mt-1 h-12 w-full rounded-xl shadow-auth-button transition-[transform,background-color,box-shadow] duration-300 hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.98]"
+                >
+                  {busy ? (
+                    <>
+                      <LoaderCircle className="animate-spin" /> Please wait…
+                    </>
+                  ) : (
+                    <>
+                      {mode === "signin" ? "Sign in" : "Create account"}
+                      <ArrowRight className="transition-transform duration-300 group-hover:translate-x-0.5" />
+                    </>
+                  )}
+                </Button>
+              </form>
+
+              <div className="my-6 flex items-center gap-3 text-[11px] font-medium uppercase text-muted-foreground">
+                <span className="h-px flex-1 bg-border" /> or continue with
+                <span className="h-px flex-1 bg-border" />
+              </div>
+
+              <Button
+                type="button"
+                variant="outline"
+                onClick={handleGoogle}
+                className="h-12 w-full rounded-xl bg-card shadow-none transition-[transform,background-color] duration-300 hover:-translate-y-0.5 hover:bg-secondary active:translate-y-0 active:scale-[0.98]"
               >
-                {busy ? "Please wait…" : mode === "signin" ? "Sign in" : "Create account"}
-              </button>
-            </form>
+                <span className="grid size-5 place-items-center rounded-full border border-border font-semibold">
+                  G
+                </span>
+                Continue with Google
+              </Button>
+            </section>
 
-            <div className="my-4 flex items-center gap-3 text-xs text-muted-foreground">
-              <span className="h-px flex-1 bg-border" /> or <span className="h-px flex-1 bg-border" />
-            </div>
-
-            <button
-              type="button"
-              onClick={handleGoogle}
-              className="w-full rounded-xl bg-card py-3 text-sm font-medium ring-1 ring-border transition-colors hover:bg-secondary"
-            >
-              Continue with Google
-            </button>
-
-            <button
+            <Button
               type="button"
               onClick={() => setMode(mode === "signin" ? "signup" : "signin")}
-              className="mt-5 w-full text-sm text-muted-foreground underline-offset-4 hover:underline"
+              variant="link"
+              className="auth-enter auth-delay-2 mt-4 h-auto w-full text-sm text-muted-foreground"
             >
               {mode === "signin"
                 ? "New here? Create an account"
                 : "Already have an account? Sign in"}
-            </button>
+            </Button>
           </>
         )}
       </div>
-    </div>
+    </main>
   );
 }
