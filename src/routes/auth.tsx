@@ -39,7 +39,7 @@ function AuthPage() {
   const [checkEmail, setCheckEmail] = useState(false);
 
   useEffect(() => {
-    if (!loading && session) navigate({ to: "/admin" });
+    if (!loading && session) navigate({ to: "/" });
   }, [loading, session, navigate]);
 
   async function handleSubmit(event: React.FormEvent) {
@@ -50,7 +50,7 @@ function AuthPage() {
         const { data, error } = await supabase.auth.signUp({
           email,
           password,
-          options: { emailRedirectTo: `${window.location.origin}/admin` },
+          options: { emailRedirectTo: window.location.origin },
         });
         if (error) throw error;
         if (!data.session) {
@@ -77,7 +77,7 @@ function AuthPage() {
       return;
     }
     if (result.redirected) return;
-    navigate({ to: "/admin" });
+    navigate({ to: "/" });
   }
 
   return (
